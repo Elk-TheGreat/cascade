@@ -1,5 +1,5 @@
 import { NODE_TYPES, NODE_MAP } from './engine/catalog.js';
-import { aiStatus, callLLM } from './engine/ai.js';
+import { aiStatusAsync, callLLM } from './engine/ai.js';
 import { normalizeGraph, validateGraph } from './graph.js';
 
 const CATALOG_DIGEST = NODE_TYPES.map((n) => ({
@@ -209,7 +209,7 @@ function guessName(prompt) {
 
 export async function generateWorkflow({ prompt, credentialId = null }) {
   if (!prompt || !String(prompt).trim()) throw new Error('Describe the workflow you want first.');
-  const status = aiStatus();
+  const status = await aiStatusAsync();
   if (!status.available && !credentialId) return planLocally(String(prompt).trim());
 
   const text = await callLLM({

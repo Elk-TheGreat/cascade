@@ -223,7 +223,7 @@ export const NODE_TYPES = [
     description: 'Ask a language model, with workflow data in context.',
     inputs: [out('main', 'in')], outputs: [out()],
     fields: [
-      f('credentialId', 'AI connection', 'credential', { help: 'Leave empty to use the server environment (OPENAI_API_KEY / ANTHROPIC_API_KEY).' }),
+      f('credentialId', 'AI connection', 'credential', { help: 'Leave empty to use the server environment — a local Ollama, or OPENAI_API_KEY / ANTHROPIC_API_KEY.' }),
       f('system', 'System prompt', 'textarea', { rows: 2, default: 'You are a precise automation assistant. Answer concisely.' }),
       f('prompt', 'Prompt', 'code', { language: 'markdown', rows: 8, required: true, default: 'Summarise this data in two sentences:\n\n{{ input }}' }),
       f('includeInput', 'Include upstream data as JSON', 'checkbox', { default: true }),
@@ -261,6 +261,13 @@ export const CREDENTIAL_TYPES = [
       f('user', 'Username', 'text'),
       f('pass', 'Password', 'secret'),
       f('from', 'From address', 'text', { placeholder: 'automation@example.com' }),
+    ],
+  },
+  {
+    type: 'ollama', label: 'Ollama (local)', icon: 'sparkles',
+    fields: [
+      f('baseUrl', 'Base URL', 'text', { default: 'http://localhost:11434' }),
+      f('model', 'Model', 'text', { default: 'llama3.1', help: 'Any model you have pulled, e.g. llama3.1 or qwen2.5-coder.' }),
     ],
   },
   {

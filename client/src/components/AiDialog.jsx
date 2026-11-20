@@ -79,8 +79,11 @@ export default function AiDialog({ open, onClose, onApply, catalog, aiStatus }) 
           <div className="row tiny faint">
             <span className={`status-dot ${aiStatus?.available ? 'on' : 'warn'}`} />
             {aiStatus?.available
-              ? `Using ${aiStatus.credentialName || 'a connected model'}.`
-              : 'No model connected — Cascade will use its built-in planner. Add an OpenAI-compatible connection for richer drafts.'}
+              ? `Using ${aiStatus.provider}${aiStatus.model ? ` · ${aiStatus.model}` : ''}${
+                aiStatus.source === 'local' ? ' (local Ollama)'
+                  : aiStatus.source?.startsWith('connection:') ? ` (${aiStatus.source.slice(11)})` : ''
+              }.`
+              : 'No model connected — run Ollama locally or add an OLLAMA_BASE_URL. Cascade will use its built-in planner meanwhile.'}
           </div>
 
           {error && <div className="badge red" style={{ alignSelf: 'flex-start' }}>{error}</div>}

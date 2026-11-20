@@ -36,14 +36,19 @@ npm start            # NODE_ENV=production, serves public/ + /api on PORT (5177)
 | `CASCADE_DATA_DIR`    | `./data`           | SQLite database + run artefacts                |
 | `CASCADE_PYTHON`      | `python3`          | Interpreter used by Python nodes               |
 | `CASCADE_DISPLAY`     | `:99`              | X display used by desktop nodes                |
+| `OLLAMA_BASE_URL`     | `http://localhost:11434` | Local Ollama daemon (`OLLAMA_HOST` also works) |
+| `OLLAMA_MODEL`        | first installed model | Model for AI nodes and generation           |
 | `OPENAI_API_KEY`      | —                  | Enables AI generation (OpenAI-compatible)      |
 | `OPENAI_BASE_URL`     | `https://api.openai.com/v1` | Point at any compatible gateway       |
 | `OPENAI_MODEL`        | `gpt-4o-mini`      | Model for AI nodes and generation              |
 | `ANTHROPIC_API_KEY`   | —                  | Enables AI generation (Messages API)           |
 | `ANTHROPIC_MODEL`     | `claude-sonnet-4-5`| Model for AI nodes and generation              |
 
-API keys can also be added in **Connections** (masked, encrypted at rest with
-AES-256-GCM); a saved connection takes precedence over the matching env var.
+AI runs on **Ollama** by default: if `ollama serve` is up on the same machine,
+Cascade uses it with zero configuration and picks whichever model you have
+pulled. A URL and model saved in **Connections** (masked, encrypted at rest with
+AES-256-GCM) take precedence over env vars, and an OpenAI or Anthropic connection
+is used when it is the only one configured.
 
 ---
 
@@ -111,9 +116,11 @@ are rejected with 401.
 
 The AI dialog turns a description ("every morning, fetch this RSS feed and post a
 summary to Slack") into a node graph laid out on the canvas, with node types,
-sensible fields and edges filled in. Without an AI key it falls back to a local
-heuristic planner, so the feature never blocks you. Applying a plan over an
-existing graph asks for confirmation first.
+sensible fields and edges filled in. It talks to a local Ollama daemon by
+default (`ollama pull llama3.1` is enough to get started), or to an OpenAI /
+Anthropic connection if that is what you configured. With no model reachable
+it falls back to a local heuristic planner, so the feature never blocks you.
+Applying a plan over an existing graph asks for confirmation first.
 
 ---
 

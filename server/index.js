@@ -9,7 +9,7 @@ import * as store from './store.js';
 import { startRun, stopRun, subscribe, replayFromDb, isLive, activeRuns } from './runs.js';
 import { syncAll, syncWorkflow, scheduleOverview, validateCron } from './scheduler.js';
 import { listCredentials, publicCredential, createCredential, updateCredential, deleteCredential } from './credentials.js';
-import { aiStatus } from './engine/ai.js';
+import { aiStatusAsync } from './engine/ai.js';
 import { desktopStatus } from './engine/desktop.js';
 import { generateWorkflow } from './generation.js';
 import { seedIfEmpty } from './seed.js';
@@ -34,7 +34,7 @@ app.get('/api/meta', async (req, res) => {
     version: '1.0.0',
     catalog: catalogPayload(),
     credentialTypes: CREDENTIAL_TYPES,
-    ai: aiStatus(),
+    ai: await aiStatusAsync(),
     desktop: await desktopStatus(),
     schedules: scheduleOverview(),
     activeRuns: activeRuns(),
@@ -215,7 +215,7 @@ app.post('/api/hooks/:token', (req, res) => {
 
 /* ------------------------------- AI ------------------------------- */
 
-app.get('/api/ai/status', (req, res) => res.json(aiStatus()));
+app.get('/api/ai/status', async (req, res) => res.json(await aiStatusAsync()));
 
 app.post('/api/ai/generate', async (req, res) => {
   try {
